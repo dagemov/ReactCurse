@@ -1,10 +1,12 @@
 import React,{useState}  from 'react';
+import shortid from 'shortid'
 import {isEmpty} from 'lodash'
 
 
 
 function App() {
   const [task,setTask]=useState("")// [name,metodo] = initialValue
+  const [tasks,setTasks]=useState([])
   const addTask=(e)=>{
     //evitar recargacion de pagina
     e.preventDefault()
@@ -12,7 +14,11 @@ function App() {
       console.log("Task empty")
       return
     }
-    console.log("Ok")
+    const newTask ={
+      id:shortid.generate(),
+      name:task
+    }
+    setTasks([...tasks,newTask])
     setTask("")
   } 
   return (
@@ -23,11 +29,16 @@ function App() {
           <div className='col-8'>
             <h4 className='text-center'>Task list</h4>
             <ul className='list-group'>
-              <li className='list-group-item'>
-                  <span className='lead'>Task name</span>
+            {
+              tasks.map((task)=>(
+                <li className='list-group-item' key={task.id}>
+                  <span className='lead'>{task.name}</span>
                   <button className='btn btn-danger btn-sm float-right mx-2'>Delte</button>
                   <button className='btn btn-warning btn-sm float-right'>Edit</button>
-              </li>
+                </li>
+              ))
+             
+            }
             </ul>
           </div>
           <div className='col-4'>
