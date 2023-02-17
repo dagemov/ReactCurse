@@ -1,6 +1,6 @@
 import React,{useState}  from 'react';
 import shortid from 'shortid'
-import {isEmpty} from 'lodash'
+import {filter, isEmpty,size} from 'lodash'
 
 
 
@@ -21,25 +21,44 @@ function App() {
     setTasks([...tasks,newTask])
     setTask("")
   } 
+  const deleteTask=(id)=>{
+    const filtersTasks = tasks.filter(task => task.id!==id)
+    setTasks(filtersTasks)
+  }
   return (
     <div className='container mt-5'>
       <h1>Task</h1>
       <hr/>
       <div className='row'>
           <div className='col-8'>
-            <h4 className='text-center'>Task list</h4>
-            <ul className='list-group'>
-            {
-              tasks.map((task)=>(
-                <li className='list-group-item' key={task.id}>
-                  <span className='lead'>{task.name}</span>
-                  <button className='btn btn-danger btn-sm float-right mx-2'>Delte</button>
-                  <button className='btn btn-warning btn-sm float-right'>Edit</button>
-                </li>
-              ))
-             
-            }
+            <h4 className='text-center'>Task list</h4>            
+          {  
+            size(tasks)==0 ? (
+              <h5>There aren't Task yet</h5>
+            ):(
+              <ul className='list-group'>
+              {
+                tasks.map((task)=>(
+                  <li className='list-group-item' key={task.id}>
+                    <span className='lead'>{task.name}</span>
+                    <button 
+                    className='btn btn-danger btn-sm float-right mx-2'
+                    onClick={()=>deleteTask(task.id)}
+                    >
+                      Delete
+                    </button>
+                    <button 
+                    className='btn btn-warning btn-sm float-right'
+                    >
+                      Edit
+                    </button>
+                  </li>
+                ))
+              
+              }
             </ul>
+            )           
+          }
           </div>
           <div className='col-4'>
             <h4 className='text-center'>formulario</h4>
