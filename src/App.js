@@ -1,7 +1,7 @@
 import React,{useState,useEffect}  from 'react';
 import shortid from 'shortid'
 import {filter, isEmpty,size} from 'lodash'
-import { getCollections } from './actions';
+import { addDocument, getCollections } from './actions';
 
 
 
@@ -16,7 +16,9 @@ function App() {
     ()=>{
       (async ()=>{
         const result = await getCollections("tasks")
-        console.log(result)
+        if(result.statusResponse){
+          setTasks(result.data)
+        }        
       })()
     },[]
   )
@@ -30,17 +32,22 @@ function App() {
     }
     return isvalid
   }
-  const addTask=(e)=>{
+  const addTask=async (e)=>{
     //evitar recargacion de pagina
     e.preventDefault()
     if(!validForm()){      
       return
     }
-    const newTask ={
+    const result = await addDocument("tasks",{name:task})
+    if(!result.statusResponse){
+      setError(result.error)
+      return
+    }
+    /*const newTask ={
       id:shortid.generate(),
       name:task
-    }
-    setTasks([...tasks,newTask])
+    }*/
+    setTasks([...tasks,{id:result.data.id, name:task}])
     setTask("")
   } 
   const deleteTask=(id)=>{
