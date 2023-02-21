@@ -1,6 +1,7 @@
-import React,{useState}  from 'react';
+import React,{useState,useEffect}  from 'react';
 import shortid from 'shortid'
 import {filter, isEmpty,size} from 'lodash'
+import { getCollections } from './actions';
 
 
 
@@ -10,7 +11,15 @@ function App() {
   const [editMode,setEditMode]=useState(false)
   const [id,setId]=useState("")
   const [error,setError]=useState(null)
-
+  //Metodo que espera que la pagina cargue y trae la data de firebase
+  useEffect(
+    ()=>{
+      (async ()=>{
+        const result = await getCollections("tasks")
+        console.log(result)
+      })()
+    },[]
+  )
   const validForm = ()=>{
     let isvalid=true
     setError(null)
