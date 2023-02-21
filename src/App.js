@@ -9,11 +9,22 @@ function App() {
   const [tasks,setTasks]=useState([])
   const [editMode,setEditMode]=useState(false)
   const [id,setId]=useState("")
+  const [error,setError]=useState(null)
+
+  const validForm = ()=>{
+    let isvalid=true
+    setError(null)
+    if(isEmpty(task)){
+      setError("u must input one task")
+      isvalid=false
+      return isvalid
+    }
+    return isvalid
+  }
   const addTask=(e)=>{
     //evitar recargacion de pagina
     e.preventDefault()
-    if(isEmpty(task)){
-      console.log("Task empty")
+    if(!validForm()){      
       return
     }
     const newTask ={
@@ -35,8 +46,7 @@ function App() {
   const saveTask=(e)=>{
     //evitar recargacion de pagina
     e.preventDefault()
-    if(isEmpty(task)){
-      console.log("Task empty")
+    if(!validForm()){      
       return
     }
     const editedTasks = tasks.map(item => item.id == id ? {id,name:task} : item)
@@ -54,7 +64,7 @@ function App() {
             <h4 className='text-center'>Task list</h4>            
           {  
             size(tasks)==0 ? (
-              <h5>There aren't Task yet</h5>
+              <li className='list-group-item'>There aren't Task yet</li>
             ):(
               <ul className='list-group'>
               {
@@ -84,6 +94,9 @@ function App() {
           <div className='col-4'>
             <h4 className='text-center'>addTask</h4>
             <form onSubmit={editMode ? saveTask: addTask}>
+              {
+                error && <spa className="text-danger">{error}</spa>
+              }
               <input 
                 type="text" 
                 className='form-control mb-2' 
