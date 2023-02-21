@@ -1,7 +1,7 @@
 import React,{useState,useEffect}  from 'react';
 import shortid from 'shortid'
-import {filter, isEmpty,size} from 'lodash'
-import { addDocument, getCollections } from './actions';
+import {filter, isEmpty,size, update} from 'lodash'
+import { addDocument, getCollections, updateDocument } from './actions';
 
 
 
@@ -59,10 +59,15 @@ function App() {
     setEditMode(true)    
     setId(theTask.id)
   }
-  const saveTask=(e)=>{
+  const saveTask=async (e)=>{
     //evitar recargacion de pagina
     e.preventDefault()
     if(!validForm()){      
+      return
+    }
+    const result = await updateDocument("tasks",id,{name:task})
+    if(!result.statusResponse){
+      setError(result.error)
       return
     }
     const editedTasks = tasks.map(item => item.id == id ? {id,name:task} : item)
