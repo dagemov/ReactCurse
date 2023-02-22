@@ -1,7 +1,7 @@
 import React,{useState,useEffect}  from 'react';
 import shortid from 'shortid'
 import {filter, isEmpty,size, update} from 'lodash'
-import { addDocument, getCollections, updateDocument } from './actions';
+import { addDocument, deleteDocument, getCollections, updateDocument } from './actions';
 
 
 
@@ -50,7 +50,12 @@ function App() {
     setTasks([...tasks,{id:result.data.id, name:task}])
     setTask("")
   } 
-  const deleteTask=(id)=>{
+  const deleteTask=async(id)=>{
+    const result  = await deleteDocument("tasks",id)
+    if(!result.statusResponse){
+      setError(result.error)
+      return
+    }
     const filtersTasks = tasks.filter(task => task.id!==id)
     setTasks(filtersTasks)
   }

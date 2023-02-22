@@ -51,3 +51,14 @@ export const updateDocument= async (conllection,id,data)=>{
     }
     return result
 }
+
+export const deleteDocument= async (conllection,id)=>{
+    const result = { statusResponse : false,error : null}
+    try{
+        await db.collection(conllection).doc(id).delete()
+        result.statusResponse=true
+    }catch(error){
+        result.error=error
+    }
+    return result
+}
